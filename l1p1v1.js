@@ -103,5 +103,4 @@ readline.question("Your password: ", user_password => { //Read password from con
         }
     })*/
         readline.close();
-    })
 })
