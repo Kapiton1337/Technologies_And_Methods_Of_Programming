@@ -13,14 +13,13 @@ class Files {
         return this.filePath;
     }
     permissionsFlag() {
-        try{
-            this.permissions = new Mode(fs.statSync(this.filePath));
-        }
-        catch (e) {
+        try {
+            this.permissions = new Mode(fs.statSync(this.filePath)); // 1 - not found; 2 - is granted; 3 - is denied;
+        } catch (e) {
             console.log(this.fileName + " Not Found");
-            return -1;
+            return 0;
         }
-        return this.permissions.toString() != "----------";
+        return this.permissions.toString() != "----------" ? 1 : 2;
     }
     fileName;
     filePath;
@@ -70,7 +69,7 @@ const decrypt = (algorithm, key, iv, encryptedData) => {
 
 const deny_access = (fileObjs) => {
     for (const i in fileObjs){
-        if(fileObjs[i].permissionsFlag() && fileObjs[i].permissionsFlag() != -1){
+        if(fileObjs[i].permissionsFlag() == 1){
             fs.chmod(fileObjs[i].filePath, PERMISSIONS_BAN, (error) => {if (error) console.log(error);})
             require('child_process').execSync('sudo chattr +i ' + fileObjs[i].filePath);
             console.log("Permissions denied for " + fileObjs[i].fileName)
@@ -79,7 +78,7 @@ const deny_access = (fileObjs) => {
 }
 const allow_access = (fileObjs) => {
     for (const i in fileObjs){
-        if (!fileObjs[i].permissionsFlag() && fileObjs[i].permissionsFlag() != -1) {
+        if (fileObjs[i].permissionsFlag() == 2) {
             require('child_process').execSync('sudo chattr -i ' + fileObjs[i].filePath);
             fs.chmod(fileObjs[i].filePath, PERMISSIONS_ALLOW, err => {if (err) console.log(err)});
             console.log("Permissions granted for  " + fileObjs[i].fileName)
