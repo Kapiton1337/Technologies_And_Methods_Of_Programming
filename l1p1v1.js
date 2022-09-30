@@ -5,7 +5,6 @@ class Files {
     constructor(fileName, filePath) {
         this.fileName = fileName;
         this.filePath = filePath;
-        this.permissionsFlag();
     }
     get fileName(){
         return this.fileName;
@@ -35,16 +34,6 @@ const readline = require("readline").createInterface({input: process.stdin, outp
 const Mode = require("stat-mode");
 
 const template = path.resolve(__dirname, "template.tbl");
-const fileNamesCreator = (template) => {
-    const fileNames = fs.readFileSync(template, 'utf-8').split('\n');
-    fileNames.shift();
-    return fileNames;
-};
-const filePathsCreator = (template) => {
-    const filePaths = fs.readFileSync(template, 'utf-8').split('\n').map(file=>path.resolve(__dirname, file));
-    filePaths.shift();
-    return filePaths;
-};
 const fileObjCreator = (template) => {
     const fileNames = fs.readFileSync(template, 'utf-8').split('\n');
     fileNames.shift();
@@ -81,19 +70,19 @@ const decrypt = (algorithm, key, iv, encryptedData) => {
 
 const deny_access = (fileObjs) => {
     for (const i in fileObjs){
-        console.log("Deny start " + fileObjs[i].fileName);
         if(fileObjs[i].permissionsFlag() && fileObjs[i].permissionsFlag() != -1){
             fs.chmod(fileObjs[i].filePath, PERMISSIONS_BAN, (error) => {if (error) console.log(error);})
             require('child_process').execSync('sudo chattr +i ' + fileObjs[i].filePath);
+            console.log("Permissions denied for " + fileObjs[i].fileName)
         }
     }
 }
 const allow_access = (fileObjs) => {
     for (const i in fileObjs){
-        console.log("Allow access " + fileObjs[i].fileName);
         if (!fileObjs[i].permissionsFlag() && fileObjs[i].permissionsFlag() != -1) {
-            require('child_process').execSync('sudo chattr -i ' + fileObjs[i].filePath)
-            fs.chmod(fileObjs[i].filePath, PERMISSIONS_ALLOW, err => {if (err) console.log(err)})
+            require('child_process').execSync('sudo chattr -i ' + fileObjs[i].filePath);
+            fs.chmod(fileObjs[i].filePath, PERMISSIONS_ALLOW, err => {if (err) console.log(err)});
+            console.log("Permissions granted for  " + fileObjs[i].fileName)
         }
     }
 };
@@ -102,7 +91,7 @@ deny_access(fileObjs);
 
 readline.question("Your password: ", user_password => { //Read password from console
     if (user_password == decrypt(algorithm, key, iv, cipher)) {
-        console.log("Accepted!");
+        console.log("Accepted");
         password_flag = 1;
         allow_access(fileObjs);
     }
