@@ -1,9 +1,6 @@
-File1.txt
-./File2.pdf
-./File3.bmp
-./File4.jpg
-./File5.sh
-./File6.c
-./File7.exe
-./File8.tar
-./File10.rar
+.File1.txt
+.File2.pdf
+.File3.bmp
+.File4.jpg
+.File5.mp3
+.File6.sh
