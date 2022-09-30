@@ -16,5 +16,8 @@
     "url": "https://github.com/Kapiton1337/Technologies_And_Methods_Of_Programming/issues"
   },
   "homepage": "https://github.com/Kapiton1337/Technologies_And_Methods_Of_Programming#readme",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "stat-mode": "^1.0.0"
+  }
 }
