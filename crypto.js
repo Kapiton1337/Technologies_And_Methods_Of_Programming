@@ -9,7 +9,7 @@ const decrypt = (algorithm, key, iv, encryptedData) => {
 }
 
 const algorithm = "aes-256-cbc";
-const message = "verycomplexpassword";
+const message = "verystrongpassword";
 
 
 const key = Buffer.from('xNRxA48aNYd33PXaODSutRNFyCu4cAe/InKT/Rx+bw0=', 'base64');
